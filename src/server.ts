@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { Server } from "http";
 import app from "./app";
 import config from "./app/config";
+import seedSuperAdmin from "./app/DB";
 
 let server: Server;
 
@@ -9,6 +10,7 @@ async function main() {
   try {
     await mongoose.connect(config.databaseUrl as string);
 
+    seedSuperAdmin();
     server = app.listen(config.port, () => {
       console.log(`Glassy server running on port ${config.port}`);
     });
