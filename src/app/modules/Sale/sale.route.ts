@@ -8,11 +8,15 @@ const router = Router();
 
 router.post(
   "/create-sale/:id",
-  auth(),
+  auth("user", "manager", "super-admin"),
   validateData(saleValidationSchema),
-  createSale
+  createSale,
 );
 
-router.get("/sales/:historyType", auth(), getSales);
+router.get(
+  "/sales/:historyType",
+  auth("user", "manager", "super-admin"),
+  getSales,
+);
 
 export const SaleRouter = router;

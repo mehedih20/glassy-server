@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { verifyToken } from "../../utils/verifyToken";
 import { Product } from "../Product/product.model";
 import { TSale } from "./sale.interface";
 import { Sale } from "./sale.model";
@@ -30,7 +31,9 @@ const createSaleInDb = async (id: string, payload: TSale) => {
 };
 
 // Get sales history of specific time
-const getSalesFromDb = async (param: string) => {
+const getSalesFromDb = async (param: string, token: string) => {
+  const decoded = verifyToken(token);
+
   const queryObj: any = {};
 
   const dateToady = new Date().toISOString().split("T")[0];
@@ -63,6 +66,12 @@ const getSalesFromDb = async (param: string) => {
       $lte: dateToady,
       $gte: yearlyDate.toISOString().split("T")[0],
     };
+  }
+
+  if (decoded) {
+    if (decoded.role === "user") {
+      queryObj.soldBy = decoded.email;
+    }
   }
 
   const result = await Sale.find(queryObj).select("-__v -createdAt -updatedAt");

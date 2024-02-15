@@ -8,18 +8,19 @@ const createSale = catchAsync(async (req, res) => {
 
   res.status(httpStatus.OK).json({
     success: true,
-    message: "Sale done successfully",
+    message: "Product sold successfully",
     sale: result,
   });
 });
 
 const getSales = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
   const { historyType } = req.params;
-  const result = await getSalesFromDb(historyType);
+  const result = await getSalesFromDb(historyType, token as string);
 
   res.status(httpStatus.OK).json({
     success: true,
-    message: "Sales fetched successfully",
+    message: "Sales history fetched successfully",
     sales: result,
   });
 });

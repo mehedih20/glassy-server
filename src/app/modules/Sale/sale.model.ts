@@ -3,6 +3,10 @@ import { TSale } from "./sale.interface";
 
 const saleSchema = new Schema<TSale>(
   {
+    soldBy: {
+      type: String,
+      required: true,
+    },
     productName: {
       type: String,
       required: true,
@@ -30,7 +34,7 @@ const saleSchema = new Schema<TSale>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const Sale = model<TSale>("Sale", saleSchema);
