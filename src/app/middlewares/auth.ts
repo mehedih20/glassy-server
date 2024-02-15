@@ -3,7 +3,9 @@ import { User } from "../modules/User/user.model";
 import catchAsync from "../utils/catchAsync";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-export const auth = () => {
+type TUserRole = "user" | "manager" | "super-admin";
+
+export const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req, res, next) => {
     const token = req.headers.authorization;
 
@@ -14,7 +16,7 @@ export const auth = () => {
 
     const decoded = jwt.verify(
       token,
-      config.jwt_access_secret as string
+      config.jwt_access_secret as string,
     ) as JwtPayload;
 
     //checking if token is valid
@@ -33,6 +35,11 @@ export const auth = () => {
     //verifying user from token data
     const user = await User.findById(decoded._id);
     if (!user) {
+      throw new Error("Unauthorized Access");
+    }
+
+    //verifying the user role
+    if (requiredRoles && !requiredRoles.includes(user.role)) {
       throw new Error("Unauthorized Access");
     }
 
