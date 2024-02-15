@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 // Registering user in database
 const registerUserInDb = async (payload: Partial<TUser>) => {
-  const result = await User.create({ ...payload, role: "admin" });
+  const result = await User.create({ ...payload, role: "user" });
   const filteredResult = await User.findById(result._id).select(
     "-password -__v",
   );
@@ -46,6 +46,7 @@ const userLoginFromDb = async (payload: TUserLogin) => {
     _id: user?._id,
     username: user?.username,
     email: user?.email,
+    role: user?.role,
   };
 
   return {
@@ -54,4 +55,11 @@ const userLoginFromDb = async (payload: TUserLogin) => {
   };
 };
 
-export { registerUserInDb, userLoginFromDb };
+const changeUserRoleInDb = async (id: string, payload: Partial<TUser>) => {
+  const result = await User.findByIdAndUpdate(id, payload, {
+    new: true,
+  }).select("-password -__v");
+  return result;
+};
+
+export { registerUserInDb, userLoginFromDb, changeUserRoleInDb };

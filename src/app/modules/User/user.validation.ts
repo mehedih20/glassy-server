@@ -11,4 +11,12 @@ const userLoginValidationSchema = z.object({
   password: z.string(),
 });
 
-export { userValidationSchema, userLoginValidationSchema };
+const roleChangeValidation = z.object({
+  role: z.enum(["user", "manager"]),
+});
+
+export {
+  userValidationSchema,
+  userLoginValidationSchema,
+  roleChangeValidation,
+};
