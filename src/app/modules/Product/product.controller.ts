@@ -33,8 +33,9 @@ const getProducts = catchAsync(async (req, res) => {
 });
 
 const deleteProduct = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
   const { id } = req.params;
-  const result = await deleteProductFromDb(id);
+  const result = await deleteProductFromDb(id, token as string);
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -44,7 +45,8 @@ const deleteProduct = catchAsync(async (req, res) => {
 });
 
 const deleteProductInBulk = catchAsync(async (req, res) => {
-  const result = await deleteProductInBulkFromDb(req.body);
+  const token = req.headers.authorization;
+  const result = await deleteProductInBulkFromDb(req.body, token as string);
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -54,8 +56,9 @@ const deleteProductInBulk = catchAsync(async (req, res) => {
 });
 
 const updateProduct = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
   const { id } = req.params;
-  const result = await updateProductInDb(id, req.body);
+  const result = await updateProductInDb(id, req.body, token as string);
 
   res.status(httpStatus.OK).json({
     success: true,

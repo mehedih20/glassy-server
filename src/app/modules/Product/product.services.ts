@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import config from "../../config";
+import { verifyToken } from "../../utils/verifyToken";
 import { User } from "../User/user.model";
 import { TProduct } from "./product.interface";
 import { Product } from "./product.model";
 import { stringSplit } from "./product.utils";
-import jwt, { JwtPayload } from "jsonwebtoken";
 
 // Creating product
 const createProductInDb = async (payload: TProduct) => {
@@ -33,10 +32,7 @@ const getProductsFromDb = async (
     searchTerm,
   } = query;
 
-  const decoded = jwt.verify(
-    token,
-    config.jwt_access_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(token);
 
   // Formatting sort object
   const sortObj: any = {};
@@ -100,19 +96,53 @@ const getProductsFromDb = async (
 };
 
 // Delete single product
-const deleteProductFromDb = async (id: string) => {
+const deleteProductFromDb = async (id: string, token: string) => {
+  //checking user access to specific product
+  const decoded = verifyToken(token);
+  if (decoded.role === "user") {
+    const product = await Product.findById(id);
+    if (product?.createdBy !== decoded.email) {
+      throw new Error("Unauthorized Access");
+    }
+  }
   const result = await Product.findByIdAndDelete(id);
   return result;
 };
 
 // Delete products in bulk
-const deleteProductInBulkFromDb = async (payload: string[]) => {
+const deleteProductInBulkFromDb = async (payload: string[], token: string) => {
+  //checking user access to specific products
+  const decoded = verifyToken(token);
+  if (decoded.role === "user") {
+    const productEmail = await Product.find({ _id: { $in: payload } }).distinct(
+      "createdBy",
+    );
+
+    if (productEmail.length > 1) {
+      throw new Error("Unauthorized Access");
+    }
+    if (productEmail.length === 1 && productEmail[0] !== decoded.email)
+      throw new Error("Unauthorized Access");
+  }
+
   const result = await Product.deleteMany({ _id: { $in: payload } });
   return result;
 };
 
 // Updating the product
-const updateProductInDb = async (id: string, payload: Partial<TProduct>) => {
+const updateProductInDb = async (
+  id: string,
+  payload: Partial<TProduct>,
+  token: string,
+) => {
+  //checking user access to specific product
+  const decoded = verifyToken(token);
+  if (decoded.role === "user") {
+    const product = await Product.findById(id);
+    if (product?.createdBy !== decoded.email) {
+      throw new Error("Unauthorized Access");
+    }
+  }
   const result = await Product.findByIdAndUpdate(id, payload, { new: true });
   return result;
 };
