@@ -1,6 +1,9 @@
+import { Types } from "mongoose";
+
 export type TProduct = {
   name: string;
   price: number;
+  productImg: string;
   quantity: number;
   frameMaterial: "metal" | "plastic" | "acetate";
   frameShape: "rectangular" | "round" | "cat-eye";
@@ -10,4 +13,5 @@ export type TProduct = {
   color: string;
   templeLength: number;
   bridgeSize: number;
+  createdBy: Types.ObjectId;
 };

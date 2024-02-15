@@ -10,6 +10,10 @@ const productSchema = new Schema<TProduct>({
     type: Number,
     required: true,
   },
+  productImg: {
+    type: String,
+    required: true,
+  },
   quantity: {
     type: Number,
     required: true,
@@ -49,6 +53,11 @@ const productSchema = new Schema<TProduct>({
   bridgeSize: {
     type: Number,
     required: true,
+  },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
   },
 });
 
