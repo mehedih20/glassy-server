@@ -40,6 +40,8 @@ export const auth = (...requiredRoles: TUserRole[]) => {
 
     //verifying the user role
     if (requiredRoles && !requiredRoles.includes(user.role)) {
+      console.log(requiredRoles, "Hi");
+
       throw new Error("Unauthorized Access");
     }
 

@@ -21,7 +21,8 @@ const createProduct = catchAsync(async (req, res) => {
 });
 
 const getProducts = catchAsync(async (req, res) => {
-  const result = await getProductsFromDb(req.query);
+  const token = req.headers.authorization;
+  const result = await getProductsFromDb(req.query, token as string);
 
   res.status(httpStatus.OK).json({
     success: true,

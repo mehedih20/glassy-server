@@ -13,7 +13,7 @@ const productValidationSchema = z.object({
   color: z.string(),
   templeLength: z.number(),
   bridgeSize: z.number(),
-  createdBy: z.string(),
+  createdBy: z.string().email(),
 });
 
 const updateProductValidationSchema = z.object({
@@ -29,6 +29,7 @@ const updateProductValidationSchema = z.object({
   color: z.string().optional(),
   templeLength: z.number().optional(),
   bridgeSize: z.number().optional(),
+  createdBy: z.string().optional(),
 });
 
 export { productValidationSchema, updateProductValidationSchema };

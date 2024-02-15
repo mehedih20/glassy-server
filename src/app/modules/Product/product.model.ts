@@ -55,9 +55,8 @@ const productSchema = new Schema<TProduct>({
     required: true,
   },
   createdBy: {
-    type: Schema.Types.ObjectId,
+    type: String,
     required: true,
-    ref: "User",
   },
 });
 

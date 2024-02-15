@@ -1,5 +1,3 @@
-import { Types } from "mongoose";
-
 export type TProduct = {
   name: string;
   price: number;
@@ -13,5 +11,5 @@ export type TProduct = {
   color: string;
   templeLength: number;
   bridgeSize: number;
-  createdBy: Types.ObjectId;
+  createdBy: string;
 };

@@ -17,28 +17,44 @@ import { auth } from "../../middlewares/auth";
 
 const router = Router();
 
-router.get("/products", auth(), getProducts);
+router.get("/products", auth("user", "manager", "super-admin"), getProducts);
 
 router.post(
   "/create-product",
-  auth(),
+  auth("user", "manager", "super-admin"),
   validateData(productValidationSchema),
   createProduct,
 );
 
-router.delete("/delete-product/:id", auth(), deleteProduct);
+router.delete(
+  "/delete-product/:id",
+  auth("user", "manager", "super-admin"),
+  deleteProduct,
+);
 
-router.delete("/delete-products", auth(), deleteProductInBulk);
+router.delete(
+  "/delete-products",
+  auth("user", "manager", "super-admin"),
+  deleteProductInBulk,
+);
 
 router.put(
   "/update-product/:id",
-  auth(),
+  auth("user", "manager", "super-admin"),
   validateData(updateProductValidationSchema),
   updateProduct,
 );
 
-router.get("/distinct-values", auth(), getDistinctValues);
+router.get(
+  "/distinct-values",
+  auth("user", "manager", "super-admin"),
+  getDistinctValues,
+);
 
-router.get("/highest-price", auth(), getHighestPrice);
+router.get(
+  "/highest-price",
+  auth("user", "manager", "super-admin"),
+  getHighestPrice,
+);
 
 export const ProductRouter = router;

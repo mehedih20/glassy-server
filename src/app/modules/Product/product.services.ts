@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import config from "../../config";
+import { User } from "../User/user.model";
 import { TProduct } from "./product.interface";
 import { Product } from "./product.model";
 import { stringSplit } from "./product.utils";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 // Creating product
 const createProductInDb = async (payload: TProduct) => {
@@ -10,7 +13,10 @@ const createProductInDb = async (payload: TProduct) => {
 };
 
 // Fetching products with filtering
-const getProductsFromDb = async (query: Record<string, unknown>) => {
+const getProductsFromDb = async (
+  query: Record<string, unknown>,
+  token: string,
+) => {
   //Extracting query fields
   const {
     sortBy,
@@ -26,6 +32,11 @@ const getProductsFromDb = async (query: Record<string, unknown>) => {
     bridgeSize,
     searchTerm,
   } = query;
+
+  const decoded = jwt.verify(
+    token,
+    config.jwt_access_secret as string,
+  ) as JwtPayload;
 
   // Formatting sort object
   const sortObj: any = {};
@@ -69,6 +80,12 @@ const getProductsFromDb = async (query: Record<string, unknown>) => {
 
   if (searchTerm) {
     querObj.name = { $regex: searchTerm, $options: "i" };
+  }
+  if (decoded) {
+    const user = await User.findOne({ email: decoded.email });
+    if (user?.role === "user") {
+      querObj.createdBy = user.email;
+    }
   }
 
   // Making query to database
