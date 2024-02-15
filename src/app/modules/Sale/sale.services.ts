@@ -5,7 +5,18 @@ import { TSale } from "./sale.interface";
 import { Sale } from "./sale.model";
 
 // Creating a sale
-const createSaleInDb = async (id: string, payload: TSale) => {
+const createSaleInDb = async (id: string, payload: TSale, token: string) => {
+  //checking if normal user is trying to sell product not created by him
+  const decoded = verifyToken(token);
+  if (decoded) {
+    if (decoded.role === "user") {
+      const product = await Product.findById(id);
+      if (decoded.email !== product?.createdBy) {
+        throw new Error("Unauthorized Access");
+      }
+    }
+  }
+
   const saleResult = await Sale.create(payload);
   if (saleResult) {
     const product = await Product.findById(id);

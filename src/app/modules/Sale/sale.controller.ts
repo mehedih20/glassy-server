@@ -3,8 +3,9 @@ import catchAsync from "../../utils/catchAsync";
 import { createSaleInDb, getSalesFromDb } from "./sale.services";
 
 const createSale = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
   const { id } = req.params;
-  const result = await createSaleInDb(id, req.body);
+  const result = await createSaleInDb(id, req.body, token as string);
 
   res.status(httpStatus.OK).json({
     success: true,
