@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import {
   changeUserRoleInDb,
+  getAllUsersFromDb,
   registerUserInDb,
   userLoginFromDb,
 } from "./user.services";
@@ -29,6 +30,16 @@ const userLogin = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const result = await getAllUsersFromDb(req.query);
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Users fetched successfully",
+    data: result,
+  });
+});
+
 const changeUserRole = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await changeUserRoleInDb(id, req.body);
@@ -40,4 +51,4 @@ const changeUserRole = catchAsync(async (req, res) => {
   });
 });
 
-export { registerUser, userLogin, changeUserRole };
+export { registerUser, userLogin, changeUserRole, getAllUsers };

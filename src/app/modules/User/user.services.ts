@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import config from "../../config";
 import { TUser, TUserLogin } from "./user.interface";
 import { User } from "./user.model";
@@ -55,6 +56,21 @@ const userLoginFromDb = async (payload: TUserLogin) => {
   };
 };
 
+const getAllUsersFromDb = async (query: Record<string, unknown>) => {
+  const { email } = query;
+
+  const queryObj: any = {};
+
+  if (email) {
+    queryObj.email = email;
+  }
+
+  queryObj.role = { $ne: "super-admin" };
+
+  const result = await User.find(queryObj).select("-password -__v");
+  return result;
+};
+
 const changeUserRoleInDb = async (id: string, payload: Partial<TUser>) => {
   const result = await User.findByIdAndUpdate(id, payload, {
     new: true,
@@ -62,4 +78,9 @@ const changeUserRoleInDb = async (id: string, payload: Partial<TUser>) => {
   return result;
 };
 
-export { registerUserInDb, userLoginFromDb, changeUserRoleInDb };
+export {
+  registerUserInDb,
+  userLoginFromDb,
+  changeUserRoleInDb,
+  getAllUsersFromDb,
+};
