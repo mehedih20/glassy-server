@@ -9,8 +9,10 @@
 ### Features
 
 - User creation
+- User role management
+- Role specific data authorization
 - Product management
-- Sale creation and categorized fetching
+- Sales creation and categorized fetching
 - Fully authorized api calls
 
 ### Technologies
@@ -34,11 +36,15 @@
 
 5. Now when the dependencies are installed, create a .env file and inside the file declare the following environment variables:
 
+   - NODE_ENV: Eg. development
    - DATABASE_URL: Mongodb configuration string having the username,password,collection name
    - PORT: Host port. Eg. 5000
    - NODE_ENV : The environment that you are building the app
    - BCRYPT_SALT_ROUNDS : Salt rounds needed for bcrypt
    - JWT_ACCESS_SECRET : The secret string needed for creating jwt access token
+   - SUPER_ADMIN_USERNAME : Provide username for super user
+   - SUPER_ADMIN_EMAIL : Super user email is also required
+   - SUPER_ADMIN_PASSWORD: Provide a strong password for super user
 
 6. Build the typescript code
 
